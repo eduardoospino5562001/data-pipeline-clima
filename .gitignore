@@ -1,4 +1,8 @@
-pycache/
-    *.pyc
-    *.json
-    *.csv
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Datos intermedios (no se suben a Git)
+data/raw/*.json
+data/processed/*.csv

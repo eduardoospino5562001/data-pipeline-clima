@@ -1,46 +1,68 @@
-# Pipeline ETL de Datos Climáticos (Villavicencio)
+# Pipeline ETL de Datos Climaticos - Villavicencio
 
-Un pipeline de datos (ETL) en Python que extrae, transforma y carga datos climáticos históricos de Villavicencio, Meta en una base de datos MySQL.
+Pipeline de datos que extrae informacion climatica de la API Open-Meteo, la transforma con Pandas y la carga en una base de datos MySQL.
 
-## Características
-- **Extract:** Descarga automática de datos históricos desde la API pública de Open-Meteo (temperaturas y precipitaciones).
-- **Transform:** Limpieza de datos y cálculo de métricas derivadas (rango térmico) usando **Pandas**.
-- **Load:** Carga eficiente en MySQL con limpieza automática de datos duplicados.
-- **Automatización:** Orquestación mediante script `.bat` para ejecución secuencial y configuración para ejecución diaria con el Programador de Tareas de Windows.
+## Caracteristicas
+
+- **Extract:** Descarga 37 dias de datos (temperatura maxima/minima y lluvia) desde Open-Meteo API.
+- **Transform:** Convierte JSON a DataFrame, calcula rango termico y metricas agregadas.
+- **Load:** Carga datos limpios en MySQL con limpieza previa para evitar duplicados.
+- **Configuracion centralizada:** Coordenadas, parametros de API y credenciales de BD en un solo archivo.
 
 ## Estructura del Proyecto
-- `extract.py`: Script de extracción que consulta la API y guarda la respuesta cruda en `clima.json`.
-- `transform.py`: Lee el JSON, transforma los datos a formato tabular (CSV) y calcula nuevas columnas.
-- `load.py`: Lee el CSV procesado e inserta los registros en la base de datos MySQL.
-- `pipeline.bat`: Archivo maestro que ejecuta los tres scripts en orden (Extract -> Transform -> Load).
+
+```
+data-pipeline-clima/
+├── src/                    # Scripts del pipeline
+│   ├── extract.py          # Descarga datos de la API
+│   ├── transform.py        # Limpieza y calculo de metricas
+│   └── load.py             # Carga en MySQL
+├── config/
+│   └── settings.py         # Configuracion centralizada
+├── data/                   # Datos (no se suben a Git)
+│   ├── raw/                # clima.json (datos crudos)
+│   └── processed/          # datos_limpio.csv (datos transformados)
+├── pipeline.bat            # Orquestador secuencial
+├── .gitignore
+└── README.md
+```
 
 ## Requisitos
-- Python 3.x instalado.
-- MySQL corriendo (se recomienda **XAMPP** para entornos locales).
-- Librerías de Python: `requests`, `pandas`, `pymysql`.
 
-## Cómo ejecutar
+- Python 3.10+
+- MySQL (XAMPP recomendado)
+- Librerias: `requests`, `pandas`, `pymysql`
 
-1. **Instala las dependencias:**
-   Abrir terminal y ejecutar:
-   ```bash
-   pip install requests pandas pymysql
-   ```
+```bash
+pip install requests pandas pymysql
+```
 
-2. **Iniciar base de datos:**
-   Asegúrar de que el servicio de **MySQL** esté activo en el panel de XAMPP.
+## Como Ejecutar
 
-3. **Ejecuta el pipeline:**
-   Hacer doble clic en `pipeline.bat` o ejecutar en la terminal:
-   ```bash
-   .\pipeline.bat
-   ```
+### Ejecucion individual
 
-## Tecnologías utilizadas
-- **Python** (Lenguaje principal)
-- **Pandas** (Manipulación de datos)
-- **MySQL** (Almacenamiento persistente)
-- **Open-Meteo API** (Fuente de datos gratuita)
+```bash
+python src/extract.py     # Paso 1: Descargar datos
+python src/transform.py   # Paso 2: Transformar datos
+python src/load.py        # Paso 3: Cargar en MySQL
+```
 
-## Autor
-Creado por Eduardo Ospino como proyecto de portafolio de Ingeniería de Datos.
+### Ejecucion automatica (todos los pasos)
+
+```bash
+pipeline.bat
+```
+
+## Automatizacion
+
+Puedes programar la ejecucion diaria con el **Programador de Tareas de Windows**:
+1. Abre "Task Scheduler" -> Create Basic Task
+2. Trigger: Daily a las 6:00 AM
+3. Action: Start a program -> selecciona tu `pipeline.bat`
+
+## Configuracion
+
+Edita `config/settings.py` para cambiar:
+- Coordenadas (latitud/longitud)
+- Parametros de la API
+- Credenciales de la base de datos
