@@ -19,7 +19,7 @@ data-pipeline-clima/
 │   └── load.py             # Carga en MySQL
 ├── config/
 │   └── settings.py         # Configuracion centralizada
-├── data/                   # Datos (no se suben a Git)
+├── data/                   # Datos 
 │   ├── raw/                # clima.json (datos crudos)
 │   └── processed/          # datos_limpio.csv (datos transformados)
 ├── pipeline.bat            # Orquestador secuencial
