@@ -55,7 +55,7 @@ pipeline.bat
 
 ## Automatizacion
 
-Puedes programar la ejecucion diaria con el **Programador de Tareas de Windows**:
+Programar ejecucion diaria con el **Programador de Tareas de Windows**:
 1. Abre "Task Scheduler" -> Create Basic Task
 2. Trigger: Daily a las 6:00 AM
 3. Action: Start a program -> selecciona tu `pipeline.bat`
